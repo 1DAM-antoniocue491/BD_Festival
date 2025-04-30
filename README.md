@@ -1,3 +1,3 @@
 # BD_Festival
 
-[Datos](tableAndData.sql)
+[Datos](tablesAndData.sql)
