@@ -133,4 +133,4 @@
 >    - Datos relevantes (IDs, tipo de operación)
 > 5. Proporcionar mensajes de error claros
 
-[Código del ejercicio 1](ej7.sql)
+[Código del ejercicio 7](ej7.sql)
