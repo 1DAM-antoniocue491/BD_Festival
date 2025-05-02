@@ -1,5 +1,5 @@
 -- Crear tabla de errores y secuencia para id
-DROP TABLE erorres CASCADE CONSTRAINTS;
+DROP TABLE errores CASCADE CONSTRAINTS;
 DROP SEQUENCE seq_errores;
 
 CREATE TABLE errores (
@@ -112,10 +112,11 @@ EXCEPTION
         VALUES (
             seq_errores.NEXTVAL,
             'VENTA_ENTRADA',
-            SQLERRM,
+            'ERROR',
             SYSDATE,
             'ConciertoID: ' || p_concierto_id || ', AsistenteID: ' || p_asistente_id || ', TipoEntrada: ' || p_tipo_entrada
         );
         
-END;
+END vender_entrada;
 /
+
