@@ -1,17 +1,3 @@
---Caso práctico: Consultas útiles.
---Ejercicio 6: Funciones
-
-/*
-CREATE OR REPLACE FUNCTION calcular_ocupacion(
-    p_concierto_id NUMBER
-) RETURN NUMBER IS
-    Devuelve porcentaje de ocupación para un concierto específico:
-    1. Obtiene capacidad del escenario relacionado
-    2. Cuenta entradas vendidas para ese concierto
-    3. Calcula: (entradas_vendidas / capacidad) * 100
-    4. Maneja casos donde no hay datos
-*/
-
 SET SERVEROUTPUT ON;
 
 CREATE OR REPLACE FUNCTION calcular_ocupacion(

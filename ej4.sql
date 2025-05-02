@@ -1,16 +1,3 @@
---Caso práctico: Asignar descuentos según tipo de entrada.
---Ejercicio 4 (CASE):
-
-
-/*
-Crea un bloque que:
-1. Pida un ID de asistente (usa &input)
-2. Verifique si tiene entradas VIP (tipo = 'VIP')
-3. Cuente el total de entradas compradas por el asistente
-4. Aplica un descuento del 5% si ha comprado 3 entradas o más
-5. Muestra por pantalla el cálculo completo con los descuentos aplicados
-*/
-
 SET SERVEROUTPUT ON;
 
 DECLARE
@@ -22,7 +9,7 @@ DECLARE
 	precio_total      NUMBER;
 BEGIN
 	SELECT CASE 
-		WHEN COUNT(*) > 0 THEN 'SÍ' 
+		WHEN COUNT(*) > 0 THEN 'S�?' 
 		ELSE 'NO' 
 	END
 	INTO tiene_vip

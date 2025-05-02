@@ -1,4 +1,3 @@
--- Crear tabla de errores y secuencia para id
 DROP TABLE errores CASCADE CONSTRAINTS;
 DROP SEQUENCE seq_errores;
 

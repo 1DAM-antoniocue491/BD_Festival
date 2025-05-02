@@ -1,14 +1,3 @@
-/*
-Ejercicio 2: Tipos de datos
-
-Declara variables para almacenar:
-- Día con más entradas vendidas (basado en conciertos)
-- Franja horaria con más conciertos programados
-- Porcentaje de ocupación promedio de los escenarios
-- Artista con más conciertos programados (registro con nombre y género)
-- Precio máximo y mínimo de entradas vendidas
-*/
-
 SET SERVEROUTPUT ON;
 DECLARE
     NOM_CONCIERTO VARCHAR(20) := 'PURO LATINO';

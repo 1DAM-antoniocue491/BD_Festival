@@ -1,11 +1,3 @@
---Ejercicio 5 (Procedimientos):
-/*
-    Completa con:
-    1. Control de capacidad (no superar 90% del escenario)
-    2. Cálculo de precio según tipo de entrada (GENERAL/VIP/PREMIUM)
-    3. Inserción en tabla ENTRADA con estado 'VALIDA'
-    4. Confirmación con ID de entrada generada
-*/
 SET SERVEROUTPUT ON;
 CREATE OR REPLACE PROCEDURE vender_entrada(
     p_asistente_id NUMBER,

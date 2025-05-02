@@ -1,17 +1,3 @@
---CONTROL DE FLUJO
---Ejercicio 3 (Condicionales):
-
-/*
-Crea un bloque que:
-1. Reciba un ID de concierto (usar &input)
-2. Calcule el precio base según:
-   - 50€ si el día es fin de semana (sábado o domingo)
-   - 35€ si es día laborable
-   - +20% si el escenario es principal (campo es_principal = 1)
-3. Muestre el precio calculado con el desglose
-4. Maneje adecuadamente posibles errores
-*/
-
 DECLARE
 	id_concierto NUMBER := &input;
 	precio_base NUMBER;
