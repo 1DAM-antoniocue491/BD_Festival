@@ -21,6 +21,8 @@
 
 [Código del ejercicio 1](ej1.sql)
 
+![Resultado ej 1](capturas/resultado_ej1.PNG)
+
 ---
 
 ## Ejercicio 2
@@ -37,6 +39,7 @@
 
 [Código del ejercicio 2](ej2.sql)
 
+![Resultado ej 2](capturas/resultado_ej2.PNG)
 ---
 
 ## Ejercicio 3
@@ -56,6 +59,7 @@
 
 [Código del ejercicio 3](ej3.sql)
 
+![Resultado ej 3](capturas/resultado_ej3.PNG)
 ---
 
 ## Ejercicio 4
@@ -73,7 +77,7 @@
 
 [Código del ejercicio 4](ej4.sql)
 
----
+![Resultado ej 4](capturas/resultado_ej4.PNG)
 
 ## Ejercicio 5
 
@@ -95,6 +99,7 @@
 
 [Código del ejercicio 5](ej5.sql)
 
+![Resultado ej 5](capturas/resultado_ej5.PNG)
 ---
 
 ## Ejercicio 6
@@ -116,6 +121,7 @@
 
 [Código del ejercicio 6](ej6.sql)
 
+![Resultado ej 6](capturas/resultado_ej6.PNG)
 ---
 
 ## Ejercicio 7
@@ -135,3 +141,5 @@
 > 5. Proporcionar mensajes de error claros
 
 [Código del ejercicio 7](ej7.sql)
+
+![Resultado ej 7](capturas/resultado_ej7.PNG)
