@@ -25,6 +25,7 @@ CREATE OR REPLACE PROCEDURE vender_entrada(
     v_estado_concierto VARCHAR2(20);
     v_escenario_id NUMBER;
     v_count NUMBER;
+    codigo_qr VARCHAR(100);
 BEGIN
     -- Validar que el concierto existe y esta ACTIVO
     SELECT estado, escenario_id INTO v_estado_concierto, v_escenario_id
@@ -89,12 +90,11 @@ BEGIN
     END IF;
 
     SELECT (MAX(ID) + 1) INTO ID_ENTRADA FROM ENTRADA;
-
-    INSERT INTO ENTRADA VALUES (
-        ID_ENTRADA, p_asistente_id, p_concierto_id, SYSDATE, PRECIOTOTAL, p_tipo_entrada, 'CODIGO QR GENERADO', 'VALIDA'
-    );
-
+    
+    codigo_qr := 'QR-' || TO_CHAR(ID_ENTRADA);
+    INSERT INTO ENTRADA VALUES (ID_ENTRADA, P_ASISTENTE_ID, P_CONCIERTO_ID, SYSDATE, PRECIOTOTAL, P_TIPO_ENTRADA, codigo_qr, 'VALIDA');
     SELECT ID INTO ID_CONFIRMACION FROM ENTRADA WHERE ID = ID_ENTRADA;
+    
     
     IF ID_CONFIRMACION = ID_ENTRADA THEN
         DBMS_OUTPUT.PUT_LINE('LA ENTRADA HA SIDO CREADA CON EXITO');
