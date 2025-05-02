@@ -2,60 +2,93 @@
 Ejercicio 2: Tipos de datos
 
 Declara variables para almacenar:
-- Día con más entradas vendidas (basado en conciertos)  (
-                                                            ESTA PARTE HACERLA CON CURSOR PORQUE HAY 5 ENTRADAS VENDIDAS
-                                                            EN 5 DÍAS DISTINTOS.
-                                                        )
-- Franja horaria con más conciertos programados         (
-                                                            SE DEBE HACER CON UN CURSOR YA QUE DEVUELVE MÁS DE UN VALOR
-                                                        )
-- Porcentaje de ocupación promedio de los escenarios    (PREGUNTAR)
-- Artista con más conciertos programados (registro con nombre y género)    (PREGUNTAR PORQUE TODOS HACEN SOLO 1 CONCIERTO)
+- Día con más entradas vendidas (basado en conciertos)
+- Franja horaria con más conciertos programados
+- Porcentaje de ocupación promedio de los escenarios
+- Artista con más conciertos programados (registro con nombre y género)
 - Precio máximo y mínimo de entradas vendidas
 */
 
 SET SERVEROUTPUT ON;
 DECLARE
-    CURSOR FRANJAS_HORARIAS IS  SELECT TO_CHAR(HORA_INICIO, 'HH24'), TO_CHAR(HORA_INICIO, 'DD-MM-YYYY'), COUNT(*)
-                                FROM CONCIERTO
-                                GROUP BY TO_CHAR(HORA_INICIO, 'HH24'), TO_CHAR(HORA_INICIO, 'DD-MM-YYYY')
-                                HAVING COUNT(*) = (
-                                    SELECT MAX(COUNT(*))
-                                    FROM CONCIERTO
-                                    GROUP BY TO_CHAR(HORA_INICIO, 'HH24'), TO_CHAR(HORA_INICIO, 'DD-MM-YYYY')
-                                ) ORDER BY COUNT(*) DESC;
     NOM_CONCIERTO VARCHAR(20) := 'PURO LATINO';
+    MAS_ENTRADAS_VENDIDAS_HORA VARCHAR(15);
+    MAS_ENTRADAS_VENDIDAS_FECHA DATE;
+    MAS_ENTRADAS_VENDIDAS_COUNT NUMBER;
     FECHA_MAS_COMPRA DATE;
     NUM_ENTRADAS NUMBER;
     FRANJA_HORARIA NUMERIC(2);
     FECHA_MUCHOS_CONCIERTOS DATE;
     CANTIDAD_TOTAL_CONCIERTOS NUMERIC(2);
+    NOMBRE_ARTISTA VARCHAR(20);
+    GENERO_ARTISTA VARCHAR(20);
+    CANT_ESCENARIOS NUMERIC(2);
+    PORCENTAJE NUMBER(3);
+    PORCENTAJE_TOTAL NUMBER(3) := 0;
     PRECIO_MAX NUMERIC(5);
     PRECIO_MIN NUMERIC(5);
 BEGIN
+    SELECT TO_CHAR(HORA_INICIO, 'HH24'), TO_CHAR(HORA_INICIO, 'DD-MM-YYYY'), COUNT(*)
+    INTO MAS_ENTRADAS_VENDIDAS_HORA, MAS_ENTRADAS_VENDIDAS_FECHA, MAS_ENTRADAS_VENDIDAS_COUNT
+    FROM CONCIERTO
+    GROUP BY TO_CHAR(HORA_INICIO, 'HH24'), TO_CHAR(HORA_INICIO, 'DD-MM-YYYY')
+    HAVING COUNT(*) = (
+        SELECT MAX(COUNT(*))
+        FROM CONCIERTO
+        GROUP BY TO_CHAR(HORA_INICIO, 'HH24'), TO_CHAR(HORA_INICIO, 'DD-MM-YYYY')
+    ) ORDER BY COUNT(*) DESC
+    FETCH FIRST 1 ROW ONLY;
     DBMS_OUTPUT.PUT_LINE (NOM_CONCIERTO || ':');
     
     SELECT TO_CHAR(FECHA_COMPRA, 'DD-MM-YYYY') INTO FECHA_MAS_COMPRA FROM ENTRADA GROUP BY FECHA_COMPRA ORDER BY COUNT(*) DESC FETCH FIRST 1 ROWS ONLY;
     SELECT COUNT(*) INTO NUM_ENTRADAS FROM ENTRADA GROUP BY FECHA_COMPRA ORDER BY COUNT(*) DESC FETCH FIRST 1 ROWS ONLY;
     
     DBMS_OUTPUT.PUT_LINE ('Días con más entradas vendidas:');
-    DBMS_OUTPUT.PUT_LINE('  El ' || FECHA_MAS_COMPRA || ' se vende/n ' || NUM_ENTRADAS || ' entrada/s.');
+    DBMS_OUTPUT.PUT_LINE('El ' || FECHA_MAS_COMPRA || ' se vende/n ' || NUM_ENTRADAS || ' entrada/s.');
     
     DBMS_OUTPUT.PUT_LINE (' ');
     
     DBMS_OUTPUT.PUT_LINE ('Franja horaria con más conciertos realizados:');
-    OPEN FRANJAS_HORARIAS;
-    LOOP
-        FETCH FRANJAS_HORARIAS INTO FRANJA_HORARIA, FECHA_MUCHOS_CONCIERTOS, CANTIDAD_TOTAL_CONCIERTOS;
-        EXIT WHEN FRANJAS_HORARIAS%NOTFOUND;
-        DBMS_OUTPUT.PUT_LINE ('  De ' || FRANJA_HORARIA || 'h a ' || (FRANJA_HORARIA+1) || 'h el ' || FECHA_MUCHOS_CONCIERTOS || ' hay ' || CANTIDAD_TOTAL_CONCIERTOS || ' conciertos.');
-    END LOOP;
-    CLOSE FRANJAS_HORARIAS;
+    DBMS_OUTPUT.PUT_LINE ('De ' || MAS_ENTRADAS_VENDIDAS_HORA || 'h a ' || (MAS_ENTRADAS_VENDIDAS_HORA+1) || 'h el ' || MAS_ENTRADAS_VENDIDAS_FECHA || ' hay ' || MAS_ENTRADAS_VENDIDAS_COUNT || ' conciertos.');
     
     DBMS_OUTPUT.PUT_LINE (' ');
+    
+    FOR A IN 1..5 LOOP
+        BEGIN
+            SELECT CAPACIDAD INTO CANT_ESCENARIOS 
+            FROM ESCENARIO 
+            WHERE ID = A;
+            
+            SELECT (COUNT(*) * 100) / CANT_ESCENARIOS INTO PORCENTAJE
+            FROM CONCIERTO 
+            WHERE ESCENARIO_ID = A;
+            
+            PORCENTAJE_TOTAL := PORCENTAJE_TOTAL + PORCENTAJE;
+        END;
+    END LOOP;
+    
+    DBMS_OUTPUT.PUT_LINE ('EL PORCENTAJE MEDIO DE OCUPACIÓN TOTAL ES DEL ' || (PORCENTAJE_TOTAL / 5) || '%');
+
+    DBMS_OUTPUT.PUT_LINE (' ');
+
+    SELECT NOMBRE, GENERO
+    INTO NOMBRE_ARTISTA, GENERO_ARTISTA
+    FROM ARTISTA
+    WHERE ID = (
+        SELECT ARTISTA_ID
+        FROM CONCIERTO
+        GROUP BY ARTISTA_ID
+        FETCH FIRST 1 ROW ONLY
+    );
+    
+    DBMS_OUTPUT.PUT_LINE ('El artista con más conciertos programados se llama ' || NOMBRE_ARTISTA  || ' y su género musical es el ' || GENERO_ARTISTA || '.');
+
+    DBMS_OUTPUT.PUT_LINE (' ');
+
     
     SELECT MIN(PRECIO), MAX(PRECIO) INTO PRECIO_MIN, PRECIO_MAX FROM ENTRADA;
     DBMS_OUTPUT.PUT_LINE ('El precio máximo de una entrada es ' || PRECIO_MAX || '€');
     DBMS_OUTPUT.PUT_LINE ('El precio mínimo de una entrada es ' || PRECIO_MIN || '€');
 END;
 /
+
