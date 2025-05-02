@@ -27,22 +27,20 @@ CREATE OR REPLACE PROCEDURE vender_entrada(
     v_count NUMBER;
 BEGIN
     -- Validar que el concierto existe y esta ACTIVO
-    BEGIN
-        SELECT estado, escenario_id INTO v_estado_concierto, v_escenario_id
-        FROM concierto
-        WHERE id = p_concierto_id;
+    SELECT estado, escenario_id INTO v_estado_concierto, v_escenario_id
+    FROM concierto
+    WHERE id = p_concierto_id;
 
         -- Si el concierto no esta activo, registrar el error y lanzar excepcion con RAISE
-        IF v_estado_concierto != 'ACTIVO' THEN
-            INSERT INTO errores (id_error, proceso, mensaje, detalles)
-            VALUES (
-                seq_errores.NEXTVAL, 'VENTA_ENTRADA',
-                'Concierto no está activo',
-                'ConciertoID: ' || p_concierto_id || ', AsistenteID: ' || p_asistente_id
-            );
-            RAISE_APPLICATION_ERROR(-20001, 'Error: El concierto no está activo.');
-        END IF;
-    END;
+    IF v_estado_concierto != 'ACTIVO' THEN
+        INSERT INTO errores (id_error, proceso, mensaje, detalles)
+        VALUES (
+            seq_errores.NEXTVAL, 'VENTA_ENTRADA',
+            'Concierto no está activo',
+            'ConciertoID: ' || p_concierto_id || ', AsistenteID: ' || p_asistente_id
+        );
+        RAISE_APPLICATION_ERROR(-20001, 'Error: El concierto no está activo.');
+    END IF;
 
     -- Verificar si el asistente existe con un COUNT
     SELECT COUNT(*) INTO v_count
@@ -105,6 +103,26 @@ BEGIN
     END IF;
 
 EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE ('Datos no encontrados');
+        INSERT INTO errores (id_error, proceso, mensaje, fecha_hora, detalles)
+        VALUES (
+            seq_errores.NEXTVAL,
+            'VENTA_ENTRADA',
+            'ERROR',
+            SYSDATE,
+            'ConciertoID: ' || p_concierto_id || ', AsistenteID: ' || p_asistente_id || ', TipoEntrada: ' || p_tipo_entrada
+        );
+     WHEN TOO_MANY_ROWS THEN
+        DBMS_OUTPUT.PUT_LINE ('Demasiadas lineas');
+        INSERT INTO errores (id_error, proceso, mensaje, fecha_hora, detalles)
+        VALUES (
+            seq_errores.NEXTVAL,
+            'VENTA_ENTRADA',
+            'ERROR',
+            SYSDATE,
+            'ConciertoID: ' || p_concierto_id || ', AsistenteID: ' || p_asistente_id || ', TipoEntrada: ' || p_tipo_entrada
+        );
     WHEN OTHERS THEN
         -- Registra erorres que no se contemplen
         INSERT INTO errores (id_error, proceso, mensaje, fecha_hora, detalles)
@@ -119,3 +137,7 @@ EXCEPTION
 END vender_entrada;
 /
 
+BEGIN
+    vender_entrada(1, 10, 'VIP');
+END;
+/
